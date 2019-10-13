@@ -1,4 +1,4 @@
-import { List } from '../document';
+import { List } from '../../core/document';
 
 describe('CRUD Operations', () => {
   it('test', async () => {

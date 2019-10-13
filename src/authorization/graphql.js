@@ -12,15 +12,6 @@ const typeDefs = gql`
     username: String!
     email: String!
   }
-
-  type Query {
-    profile: User
-  }
-
-  type Mutation {
-    signup(username: String!, email: String!, password: String!): String
-    login(email: String!, password: String!): String
-  }
 `;
 
 const resolvers = {
@@ -43,11 +34,9 @@ const resolvers = {
         password: await bcrypt.hash(password, 10),
       });
 
-      return jwt.sign(
-        { id: user.id, email: user.email },
-        SECRET,
-        { expiresIn: '1y' },
-      );
+      return jwt.sign({ id: user.id, email: user.email }, SECRET, {
+        expiresIn: '1y',
+      });
     },
     async login(_, { email, password }) {
       const user = await User.findOne({ email });
@@ -62,11 +51,9 @@ const resolvers = {
         throw new Error('Incorrect password');
       }
 
-      return jwt.sign(
-        { id: user.id, email: user.email },
-        SECRET,
-        { expiresIn: '1d' },
-      );
+      return jwt.sign({ id: user.id, email: user.email }, SECRET, {
+        expiresIn: '1d',
+      });
     },
   },
 };

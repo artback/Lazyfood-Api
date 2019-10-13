@@ -5,8 +5,7 @@ export const PORT = process.env.PORT || 3000;
 
 export const SECRET = process.env.SECRET || 'jbmpHPLoaV8N0nEpuLxlpT95FYakMPiu';
 
-export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://web-go-user:web-go-user@ds133961.mlab.com:33961/web-go-demo';
-export const POSTGRES_URL = process.env.POSTGRES_URL || 'postgres://ymuxoegt:ONfBcCQylth3boOdUE2EkcZbC2OAbtcm@tantor.db.elephantsql.com:5432/ymuxoegt';
+export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/web-go-demo';
 export const REDIS_URL = process.env.REDIS_URL || 'redis://redis-17929.c1.us-central1-2.gce.cloud.redislabs.com:17929';
 
 export const CLOUDINARY_CONFIG = {

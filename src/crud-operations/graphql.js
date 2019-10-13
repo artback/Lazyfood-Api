@@ -1,49 +1,103 @@
 import gql from 'graphql-tag';
 
-import { List } from './document';
+import axios from 'axios';
+import { Recipe, Rating } from '../core/document';
 
-export const listTypeDefs = gql`
-  type List {
-    _id: ID!
-    text: String!
+export const recipeTypeDefs = gql`
+  type RatingAndRecipe {
+    recipe: Recipe
+    rating: Rating
+  }
+  type MenuItem {
+    recipe: Recipe
+    rating: RatingWithDay
+  }
+  type RatingWithDay {
+    updated: String
+    value: Int!
+    recipe_id: String
+  }
+  type Rating {
+    updated: String
+    value: Int!
+    recipe_id: String
+  }
+  type RecipeList {
+    submitted: Boolean
+    recipes: [RecipeByDay!]!
   }
 
-  type Query {
-    list(_id: String, text: String): [List]
+  type RecipeByDay {
+    weekDay: String
+    servings: Int
+    recipe: Recipe
+  }
+  type Recipe {
+    uri: String
+    label: String
+    image: String
+    source: String
+    url: String
+    yield: Int
+    dietLabels: [String]
+    healthLabels: [String]
+    cautions: [String]
+    ingredientLines: [String]
+    ingredients: [String]
+    calories: Float
+    totalWeight: Float
+    totalTime: Float
+    totalNutritens: [Nutritents]
+    totalDialy: [Nutritents]
   }
 
-  type Mutation {
-    addText(text: String!): List
-    updateText(_id: ID!, text: String!): List
-    deleteText(_id: ID!): List
+  type Nutritents {
+    label: String
+    quantity: Float
+    unit: String
+  }
+  type ingredient {
+    text: String
+    weight: Float
   }
 `;
 
-export const listResolvers = {
-  /**
-   * @example
-   * query {
-   *   list { _id text }
-   * }
-   *
-   * query {
-   *   list(_id: "${_id}") { _id text }
-   * }
-   *
-   * query {
-   *   list(text: "${text}") { _id text }
-   * }
-   */
+export const recipeResolvers = {
   Query: {
-    async list(root, { _id, text }) {
+    async ratings(root, { _recipeIds }) {
       const find = {};
 
-      if (_id) find._id = _id;
-      if (text) find.text = { $regex: text, $options: 'i' };
+      if (_recipeIds)
+        find.id = {
+          $in: [_recipeIds],
+        };
 
-      const data = await List.find(find).exec();
+      return Rating.find(find).exec();
+    },
+    async rating(root, { recipeId }) {
+      const find = {};
 
-      return data;
+      if (recipeId) find.id = recipeId;
+
+      return Rating.find(find).exec();
+    },
+    async menu(root, { query }) {
+      return axios.get(
+        `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${query}`,
+      );
+    },
+    async recipe(root, { query }) {
+      const res = await axios.get(
+        `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${query}`,
+      );
+      const recipes = res.data.hits.map(recipe => ({
+        ...recipe.recipe,
+      }));
+      return recipes;
+    },
+    async recipesWithRating(root, { _id, query }) {
+      const recipe = await this.recipes(root, query);
+      return recipe;
     },
   },
 
@@ -62,24 +116,18 @@ export const listResolvers = {
    * }
    */
   Mutation: {
-    async addText(root, { text }) {
-      const list = await new List({ text });
-      const data = await list.save();
-
-      return data;
+    async deleteRating(root, { text }) {
+      return new Recipe({ text }).save();
     },
-    async updateText(root, { _id, text }) {
+    async updateMenu(root, { _id, text }) {
       const conditions = { _id };
       const update = { $set: { text } };
       const options = { new: true, upsert: true };
 
-      const data = await List.findOneAndUpdate(conditions, update, options).exec();
-
-      return data;
+      return Recipe.findOneAndUpdate(conditions, update, options).exec();
     },
-    async deleteText(root, { _id }) {
-      const data = await List.findByIdAndRemove(_id);
-      return data;
+    async updateRating(root, { _id }) {
+      return Recipe.findByIdAndRemove(_id);
     },
   },
 };

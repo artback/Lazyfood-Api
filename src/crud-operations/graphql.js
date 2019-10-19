@@ -68,18 +68,20 @@ export const recipeResolvers = {
       const find = {};
 
       if (_recipeIds)
-        find.id = {
+        find.recipe_id = {
           $in: [_recipeIds],
         };
 
       return Rating.find(find).exec();
     },
     async rating(root, { recipeId }) {
-      const find = {};
-
-      if (recipeId) find.id = recipeId;
-
-      return Rating.find(find).exec();
+      const find = { recipe_id: recipeId };
+      const rating = (await Rating.find(find).exec())[0];
+      return {
+        value: rating.value,
+        recipe_id: rating.recipe_id,
+        updated: rating.updated,
+      };
     },
     async menu(root, { query }) {
       return axios.get(
@@ -95,7 +97,7 @@ export const recipeResolvers = {
       }));
       return recipes;
     },
-    async recipesWithRating(root, { _id, query }) {
+    async recipesWithRating(root, { query }) {
       const recipe = await this.recipes(root, query);
       return recipe;
     },

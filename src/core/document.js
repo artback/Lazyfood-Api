@@ -60,7 +60,11 @@ const recipeSchema = new Schema({
 
 const ratingSchema = new Schema({
   value: { type: Number, required: true },
-  id: { type: String, required: true, index: true },
+  recipe_id: { type: String, required: true, index: true },
+  username: { type: String, required: true},
+});
+ratingSchema.index({
+  recipe_id: 1, username: 1
 });
 
 const menuSchema = new Schema({

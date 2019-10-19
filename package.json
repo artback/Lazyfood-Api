@@ -10,16 +10,11 @@
     "build": "babel src -d dist --ignore **/__tests__/**,**/__mocks__/**",
     "lint": "eslint 'src/**/*.js'",
     "unit": "jest \"src/.*\\.js$\" --coverage --forceExit",
+    "seed": "babel-node src/seeds/seed.js",
     "e2e": "cross-env JEST_ENV=e2e jest \"src/.*\\.js$\" --forceExit",
     "_codecov": "codecov",
     "_heroku": "heroku"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Shyam-Chen/Express-Starter.git"
-  },
-  "author": "Shyam Chen",
-  "license": "MIT",
   "dependencies": {
     "@elastic/elasticsearch": "7.3.0",
     "@tensorflow/tfjs-node": "1.2.1",

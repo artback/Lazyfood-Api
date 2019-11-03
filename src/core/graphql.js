@@ -12,12 +12,9 @@ const typeDefs = mergeTypes([query, recipeTypeDefs, authorization.typeDefs], {
 
 const resolvers = mergeResolvers([recipeResolvers, authorization.resolvers]);
 
-const context = ({ req }) => {
-  // if (!req.user) throw new Error('You must be logged in to query this schema');
-  return {
-    user: req.user,
-  };
-};
+const context = ({ req }) => ({
+  user: req.user,
+});
 
 export const pubsub = new PubSub();
 

@@ -20,20 +20,22 @@ import mongoose, { Schema } from 'mongoose';
  * }
  */
 const userSchema = new Schema({
-  username: {
+  id: {
     type: String,
     required: true,
     unique: true,
+    index: true,
   },
-  password: {
+  displayName: {
     type: String,
-    required: true,
   },
   email: {
     type: String,
     validate: {
       validator(value) {
-        return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(value);
+        return /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i.test(
+          value,
+        );
       },
       message: ({ value }) => `${value} is not a valid email format`,
     },

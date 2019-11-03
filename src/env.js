@@ -6,7 +6,7 @@ export const PORT = process.env.PORT || 3000;
 export const SECRET = process.env.SECRET || 'jbmpHPLoaV8N0nEpuLxlpT95FYakMPiu';
 
 export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/web-go-demo';
-export const REDIS_URL = process.env.REDIS_URL || 'redis://redis-17929.c1.us-central1-2.gce.cloud.redislabs.com:17929';
+export const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
 export const CLOUDINARY_CONFIG = {
   cloud_name: process.env.CLOUDINARY_NAME || 'sample',
@@ -20,13 +20,10 @@ export const AUTH = {
     clientSecret: process.env.GOOGLE_SECRET || 'stZ7p0BC_oQrUvJKsvqAxehT',
   },
   FACEBOOK: {
-    clientID: process.env.FACEBOOK_ID || '...',
-    clientSecret: process.env.FACEBOOK_SECRET || '...',
+    clientID: process.env.FACEBOOK_ID || '291185644898894',
+    clientSecret: process.env.FACEBOOK_SECRET || '9d6a0eae8f02f88c1558a96406924592',
   },
-  TWITTER: {
-    consumerKey: process.env.TWITTER_KEY || '...',
-    consumerSecret: process.env.TWITTER_SECRET || '...',
-  },
+  callbackURL: "https://localhost:3000/authorization/facebook/callback"
 };
 
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '...';

@@ -61,11 +61,11 @@ const recipeSchema = new Schema({
 const ratingSchema = new Schema({
   value: { type: Number, required: true },
   recipe_id: { type: String, required: true, index: true },
-  username: { type: String, required: true},
+  user_id: { type: String, required: true},
 });
 ratingSchema.index({
-  recipe_id: 1, username: 1
-});
+  recipe_id: 1, user_id: 1
+},{unique: true});
 
 const menuSchema = new Schema({
   week_year: { type: String, required: true, index: true },

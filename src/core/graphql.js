@@ -2,7 +2,7 @@ import { ApolloServer } from 'apollo-server-express';
 import { mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
 import { PubSub } from 'graphql-subscriptions';
 
-import { recipeTypeDefs, recipeResolvers } from '~/crud-operations/graphql';
+import { recipeTypeDefs, recipeResolvers } from '~/recipes/graphql';
 import authorization from '~/authorization/graphql';
 import query from './mut_query';
 

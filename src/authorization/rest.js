@@ -1,11 +1,5 @@
 import { Router } from 'express';
 import passport from 'passport';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-
-import { SECRET, AUTH } from '~/env';
-
-import { User } from './document';
 
 const router = Router();
 
@@ -27,68 +21,14 @@ router.get('/facebook/callback', (req, res, next) => {
       if (!user) {
         return res.redirect(`https://localhost:4200/home`);
       }
+      console.log('token ', jwtToken);
       return res.redirect(
         `https://localhost:4200/home?id=${user._id.toString()}&name=${
           user.displayName
-        }&=token=${jwtToken}`,
+        }&token=${encodeURI(jwtToken)}`,
       );
     },
   )(req, res, next);
-});
-/**
- * @name register - Register an account
- * @return {Object<{ username: string, message: string }>}
- *
- * @example POST /authorization/register { username: ${username}, password: ${password} }
- */
-router.post('/register', async (req, res) => {
-  const { username, password, email } = req.body;
-  try {
-    const passwordHash = await bcrypt.hash(password, 10);
-    const user = new User({ username, password: passwordHash, email });
-    await user.save();
-  } catch (error) {
-    return res.ok().json({ error });
-  }
-  return res.ok();
-});
-
-/**
- * @name login - get user token
- * @return {Object<{ username: string, token: string, message: string }>}
- *
- * @example POST /authorization/login { username: ${username}, password: ${password} }
- */
-router.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
-  try {
-    const user = await User.findOne({ username }).exec();
-    const passwordsMatch = await bcrypt.compare(password, user.password);
-
-    if (passwordsMatch) {
-      const payload = {
-        username: user.username,
-        expires: Date.now() + 3 * 60 * 60 * 1000,
-      };
-
-      req.login(payload, { session: false }, error => {
-        if (error) res.status(400).json({ message: error });
-
-        const token = jwt.sign(JSON.stringify(payload), SECRET);
-
-        res.status(200).json({
-          username: user.username,
-          token,
-          message: 'Sign in suceesfully',
-        });
-      });
-    } else {
-      res.status(400).json({ message: 'Incorrect Username / Password' });
-    }
-  } catch (error) {
-    res.status(400).json({ message: error });
-  }
 });
 
 /**

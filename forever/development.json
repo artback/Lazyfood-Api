@@ -1,0 +1,10 @@
+{
+  "uid": "app",
+  "append": true,
+  "watch": true,
+  "script": "babel-node src/server.js",
+  "sourceDir": ".",
+  "logFile": "forever.log",
+  "outFile": "out.log",
+  "errFile": "error.log"
+}

@@ -58,11 +58,11 @@ passport.use(
             });
             nUser.save(sErr => {
               if (sErr) console.log(sErr);
-              const token = jwt.sign(user, SECRET);
+              const token = jwt.sign(JSON.stringify(user), SECRET);
               return done(err, user, token);
             });
           } else {
-            const token = jwt.sign(user, SECRET);
+            const token = jwt.sign(JSON.stringify(user), SECRET);
             return done(err, user, token);
           }
         },

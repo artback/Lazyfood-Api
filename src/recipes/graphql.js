@@ -74,8 +74,8 @@ export const recipeResolvers = {
 
       return Rating.find(find).exec();
     },
-    async rating(root, { recipeId }) {
-      const find = { recipe_id: recipeId };
+    async rating(root, { recipeId }, context) {
+      const find = { recipe_id: recipeId, user_id: context.user.id };
       const rating = (await Rating.find(find).exec())[0];
       return {
         value: rating.value,
@@ -88,7 +88,7 @@ export const recipeResolvers = {
         `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${query}`,
       );
     },
-    async recipe(root, { query }) {
+    async recipes(root, { query }) {
       const res = await axios.get(
         `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${query}`,
       );
@@ -97,7 +97,7 @@ export const recipeResolvers = {
       }));
       return recipes;
     },
-    async recipesWithRating(root, { query }) {
+    async recipesWithRatings(root, { query }) {
       const recipe = await this.recipes(root, query);
       return recipe;
     },
@@ -128,8 +128,11 @@ export const recipeResolvers = {
 
       return Recipe.findOneAndUpdate(conditions, update, options).exec();
     },
-    async updateRating(root, { _id }) {
-      return Recipe.findByIdAndRemove(_id);
+    async updateRating(root, { recipeId, rating }, context) {
+      const query = { recipe_id: recipeId, user_id: context.user.id };
+      const options = { upsert: true, new: true };
+      const update = { value: rating };
+      return Rating.findOneAndUpdate(query, update, options);
     },
   },
 };

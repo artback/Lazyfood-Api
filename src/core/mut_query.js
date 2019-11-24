@@ -6,16 +6,16 @@ const typeDefs = gql`
     ratings(recipeIds: [String]): [Rating]!
     menu(yearWeek: String!): [MenuItem]
     rating(recipeId: String!): Rating
-    recipe(query: String, begin: Int, end: Int): [Recipe]
-    recipesWithRating(query: String): [RatingAndRecipe]
+    recipes(query: String): [Recipe]
+    recipesWithRatings(query: String): [RatingAndRecipe]
   }
 
   type Mutation {
     signup(username: String!, email: String!, password: String!): String
     login(email: String!, password: String!): String
-    deleteRating(recipe_id: String!): Rating
-    updateMenu(menu: [String!]!, year_week: String!): [String!]!
-    updateRating(rating: Int!, recipe_id: String!): Rating
+    deleteRating(recipeId: String!): Rating
+    updateMenu(menu: [String!]!, yearWeek: String!): [String!]!
+    updateRating( recipeId: String!,rating: Int! ): Rating
   }
 `;
 

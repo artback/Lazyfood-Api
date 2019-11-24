@@ -2,31 +2,23 @@ import { Router } from 'express';
 import { from } from 'rxjs';
 import request from 'request-promise';
 
-import { Recipe} from '../core/document';
+import axios from 'axios';
+import { Recipe } from '../core/document';
 
 const router = Router();
 
-/**
- * @name list - get a list
- * @param {string} [_id] - get a item by ID
- * @param {string} [text] - search for text in list
- * @return {Object<{ data: Recipe[], message: string }>}
- *
- * @example GET /crud-operations
- * @example GET /crud-operations?_id=${_id}
- * @example GET /crud-operations?text=${text}
- */
-router.get('/', async (req, res) => {
-  const { _id, text } = req.query;
-
-  const find = {};
-
-  if (_id) find._id = _id;
-  if (text) find.text = { $regex: text, $options: 'i' };
-
-  const data = await Recipe.find(find).exec();
-
-  res.json({ data, message: 'Data obtained.' });
+router.get('/:query', async (req, res) => {
+  try {
+    const response = await axios.get(
+      `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${req.params.query}`,
+    );
+    const recipes = response.data.hits.map(recipe => ({
+      ...recipe.recipe,
+    }));
+    res.status(response.status).json(recipes);
+  } catch (error) {
+    res.status(500).json(error);
+  }
 });
 
 /**
@@ -37,8 +29,9 @@ router.get('/', async (req, res) => {
  * @example GET /crud-operations/${id}
  */
 router.get('/item/:id', (req, res) => {
-  from(Recipe.find({ _id: req.params.id }).exec())
-    .subscribe(data => res.json({ data, message: 'Data obtained.' }));
+  from(Recipe.find({ _id: req.params.id }).exec()).subscribe(data =>
+    res.json({ data, message: 'Data obtained.' }),
+  );
 });
 
 /**
@@ -48,8 +41,9 @@ router.get('/item/:id', (req, res) => {
  * @example GET /crud-operations/count
  */
 router.get('/count', (req, res) => {
-  from(Recipe.count().exec())
-    .subscribe(data => res.json({ data, message: 'Data obtained.' }));
+  from(Recipe.count().exec()).subscribe(data =>
+    res.json({ data, message: 'Data obtained.' }),
+  );
 });
 
 /**
@@ -71,13 +65,17 @@ router.get('/pagination', async (req, res) => {
   const total = JSON.parse(count).data;
 
   for (let i = 0, l = total; i < l / row; i++) {
-    if (page === (i + 1)) {
-      data.push(Recipe.find({}).skip(i * row).limit(row));
+    if (page === i + 1) {
+      data.push(
+        Recipe.find({})
+          .skip(i * row)
+          .limit(row),
+      );
     }
   }
 
   res.json({
-    data: [...await Promise.all(data)],
+    data: [...(await Promise.all(data))],
     total,
     message: 'Data obtained.',
   });
@@ -91,8 +89,7 @@ router.get('/pagination', async (req, res) => {
  */
 router.post('/', async (req, res) => {
   if (!req.body.text) {
-    res.status(400)
-      .json({ message: 'Please pass text.' });
+    res.status(400).json({ message: 'Please pass text.' });
   }
 
   const list = await new Recipe(req.body);
@@ -108,9 +105,10 @@ router.post('/', async (req, res) => {
  * @example PUT /crud-operations/${id}
  */
 router.put('/:id', async (req, res) => {
-  const message = await Recipe
-    .findOneAndUpdate({ _id: req.params.id }, req.body)
-    .then(() => 'Recipe updated');
+  const message = await Recipe.findOneAndUpdate(
+    { _id: req.params.id },
+    req.body,
+  ).then(() => 'Recipe updated');
 
   res.json({ message });
 });
@@ -122,9 +120,9 @@ router.put('/:id', async (req, res) => {
  * @example DELETE /crud-operations/${id}
  */
 router.delete('/:id', async (req, res) => {
-  const message = await Recipe
-    .findByIdAndRemove(req.params.id)
-    .then(() => 'Recipe deleted');
+  const message = await Recipe.findByIdAndRemove(req.params.id).then(
+    () => 'Recipe deleted',
+  );
 
   res.json({ message });
 });
@@ -138,14 +136,11 @@ router.delete('/:id', async (req, res) => {
 router.delete('/', async (req, res) => {
   const { selected } = req.body;
 
-  const message = await Recipe
-    .remove({ _id: { $in: selected } })
-    .then(() => 'Recipe deleted');
+  const message = await Recipe.remove({ _id: { $in: selected } }).then(
+    () => 'Recipe deleted',
+  );
 
   res.json({ message });
 });
-
-
-
 
 export default router;

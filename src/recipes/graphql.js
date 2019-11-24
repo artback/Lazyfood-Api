@@ -103,20 +103,6 @@ export const recipeResolvers = {
     },
   },
 
-  /**
-   * @example
-   * mutation {
-   *   addText(text: "${text}") { _id text }
-   * }
-   *
-   * mutation {
-   *   updateText(_id: "${_id}", text: "${text}") { _id text }
-   * }
-   *
-   * mutation {
-   *   deleteText(_id: "${_id}") { _id text }
-   * }
-   */
   Mutation: {
     async deleteRating(root, { recipeId }, context) {
       const query = { recipe_id: recipeId, user_id: context.user.id };

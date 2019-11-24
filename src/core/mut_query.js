@@ -14,7 +14,7 @@ const typeDefs = gql`
     signup(username: String!, email: String!, password: String!): String
     login(email: String!, password: String!): String
     deleteRating(recipeId: String!): Rating
-    updateMenu(menu: [String!]!, yearWeek: String!): [String!]!
+    updateMenu( yearWeek: String!, menu: [String!]!): [String!]!
     updateRating( recipeId: String!,rating: Int! ): Rating
   }
 `;

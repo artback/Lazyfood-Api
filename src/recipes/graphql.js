@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 import axios from 'axios';
-import { Recipe, Rating } from '../core/document';
+import { Menu, Rating } from '../core/document';
 
 export const recipeTypeDefs = gql`
   type RatingAndRecipe {
@@ -118,15 +118,15 @@ export const recipeResolvers = {
    * }
    */
   Mutation: {
-    async deleteRating(root, { text }) {
-      return new Recipe({ text }).save();
+    async deleteRating(root, { recipeId }, context) {
+      const query = { recipe_id: recipeId, user_id: context.user.id };
+      return Rating.findOneAndDelete(query);
     },
-    async updateMenu(root, { _id, text }) {
-      const conditions = { _id };
-      const update = { $set: { text } };
+    async updateMenu(root, { weekYear, menu }, context) {
+      const query = { week_year: weekYear, user_id: context.user.id };
+      const update = { menu };
       const options = { new: true, upsert: true };
-
-      return Recipe.findOneAndUpdate(conditions, update, options).exec();
+      return Menu.findOneAndUpdate(query, update, options).exec();
     },
     async updateRating(root, { recipeId, rating }, context) {
       const query = { recipe_id: recipeId, user_id: context.user.id };

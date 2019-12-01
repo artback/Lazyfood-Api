@@ -2,6 +2,7 @@ import gql from 'graphql-tag';
 
 import axios from 'axios';
 import { Menu, Rating } from '../core/document';
+import { RECIPE } from '~/env';
 
 export const recipeTypeDefs = gql`
   type RatingAndRecipe {
@@ -84,14 +85,10 @@ export const recipeResolvers = {
       };
     },
     async menu(root, { query }) {
-      return axios.get(
-        `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${query}`,
-      );
+      return axios.get(`${query}`);
     },
     async recipes(root, { query }) {
-      const res = await axios.get(
-        `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${query}`,
-      );
+      const res = await axios.get(`${RECIPE.URL}&query=${query}`);
       const recipes = res.data.hits.map(recipe => ({
         ...recipe.recipe,
       }));

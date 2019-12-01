@@ -5,7 +5,7 @@ export const PORT = process.env.PORT || 3000;
 
 export const SECRET = process.env.SECRET || 'jbmpHPLoaV8N0nEpuLxlpT95FYakMPiu';
 
-export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/web-go-demo';
+export const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/lazy_food';
 export const REDIS_URL = process.env.REDIS_URL || 'redis://localhost:6379';
 
 export const CLOUDINARY_CONFIG = {
@@ -24,6 +24,10 @@ export const AUTH = {
     clientSecret: process.env.FACEBOOK_SECRET || '9d6a0eae8f02f88c1558a96406924592',
   },
   callbackURL: "https://localhost:3000/authorization/facebook/callback"
+};
+
+export const RECIPE = {
+  URL: 'https://api.spoonacular.com/recipes/search?apiKey=95ea11aac7844ca3820e7107e3512815'
 };
 
 export const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY || '...';

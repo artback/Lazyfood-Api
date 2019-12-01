@@ -26,35 +26,35 @@ mongoose.connection
           value: 5,
           user_id: '375012663285633',
           recipe_id:
-            'http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_1b6dfeaf0988f96b187c7c9bb69a14fa',
+            '246916',
           updated: '2019-09-04T17:25:34.687Z'
         },
         {
           value: 5,
           user_id: '375012663285633',
           recipe_id:
-            'http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_a7d58871fda455844753aace394440ae',
+            '245166',
           updated: '2019-09-04T17:25:34.687Z'
         },
         {
           value: 4,
           user_id: '375012663285633',
           recipe_id:
-            'http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_b2ebad01df2a319d259c2d3f61eb40c5',
+            '246009',
           updated: '2019-09-04T17:25:34.687Z'
         },
         {
           value: 3,
           user_id: '375012663285633',
           recipe_id:
-            'http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_d7167bbdf03eb4b786684ab6a81d52b4',
+            '219957',
           updated: '2019-09-04T17:25:34.687Z'
         },
         {
           value: 3,
           user_id: '375012663285633',
           recipe_id:
-            'http%3A%2F%2Fwww.edamam.com%2Fontologies%2Fedamam.owl%23recipe_f120986ea8ca0b283984f7d7586028c6',
+            '607109',
           updated: '2019-09-04T17:25:34.687Z'
         },
       ],

@@ -4,18 +4,16 @@ import request from 'request-promise';
 
 import axios from 'axios';
 import { Recipe } from '../core/document';
+import { RECIPE } from '~/env';
 
 const router = Router();
 
 router.get('/:query', async (req, res) => {
   try {
     const response = await axios.get(
-      `https://api.edamam.com/search?app_id=7bcc7b18&app_key=6bf94f4c82184663f1a9e0f5ee962982&q=${req.params.query}`,
+      `${RECIPE.URL}&query=${req.params.query}`,
     );
-    const recipes = response.data.hits.map(recipe => ({
-      ...recipe.recipe,
-    }));
-    res.status(response.status).json(recipes);
+    res.status(response.status).json(response.data.results);
   } catch (error) {
     res.status(500).json(error);
   }

@@ -63,9 +63,9 @@ app.use('/', routes);
  */
 app.use('/graphql', (req, res, next) => {
   passport.authenticate('jwt', { session: false }, (err, user) => {
-    if (!user) {
-      return res.status(401).send();
-    }
+    // if (!user) {
+    //   return res.status(401).send();
+    // }
     req.user = user;
     return next(err, user);
   })(req, res, next);

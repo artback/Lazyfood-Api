@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import axios from 'axios';
 import { Menu, Rating } from '../core/document';
 import { RECIPE } from '~/env';
+import weeklist from './weekList';
 
 export const recipeTypeDefs = gql`
   type RatingAndRecipe {
@@ -34,22 +35,12 @@ export const recipeTypeDefs = gql`
     recipe: Recipe
   }
   type Recipe {
-    uri: String
-    label: String
+    id: String
+    title: String
+    readyInMinutes: Int
+    servings: Int
     image: String
-    source: String
-    url: String
-    yield: Int
-    dietLabels: [String]
-    healthLabels: [String]
-    cautions: [String]
-    ingredientLines: [String]
-    ingredients: [String]
-    calories: Float
-    totalWeight: Float
-    totalTime: Float
-    totalNutritens: [Nutritents]
-    totalDialy: [Nutritents]
+    imageUrls: [String]
   }
 
   type Nutritents {
@@ -84,11 +75,21 @@ export const recipeResolvers = {
         updated: rating.updated,
       };
     },
-    async menu(root, { query }) {
-      return axios.get(`${query}`);
+    async menu(root, { yearWeek }, context) {
+      const menu = await Menu.findOne({
+        year_week: yearWeek.toString(),
+        user_id: context.id,
+      });
+      if (menu) {
+        return menu;
+      }
+      const random = await weeklist(context.user.id);
+      return random.map(r =>
+        axios.get(`${RECIPE.URL}recipes/${r.id}?${RECIPE.apiKey}`),
+      );
     },
     async recipes(root, { query }) {
-      const res = await axios.get(`${RECIPE.URL}&query=${query}`);
+      const res = await axios.get(`${RECIPE.SEARCH}&query=${query}`);
       const recipes = res.data.hits.map(recipe => ({
         ...recipe.recipe,
       }));
@@ -114,7 +115,7 @@ export const recipeResolvers = {
     async updateRating(root, { recipeId, rating }, context) {
       const query = { recipe_id: recipeId, user_id: context.user.id };
       const options = { upsert: true, new: true };
-      const update = { value: rating };
+      const update = { value: rating, updated: Date.now() };
       return Rating.findOneAndUpdate(query, update, options);
     },
   },

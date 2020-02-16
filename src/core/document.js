@@ -62,6 +62,7 @@ const ratingSchema = new Schema({
   value: { type: Number, required: true },
   recipe_id: { type: String, required: true, index: true },
   user_id: { type: String, required: true},
+  updated: {type: String, required: true}
 });
 ratingSchema.index({
   recipe_id: 1, user_id: 1

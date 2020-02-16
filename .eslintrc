@@ -23,7 +23,7 @@
   "rules": {
     // Plugins
     "import/prefer-default-export": "off",
-
+    "camelcase": "off",
     "prettier/prettier": "off",
 
     // Possible Errors
